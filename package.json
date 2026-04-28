@@ -1,0 +1,35 @@
+{
+  "name": "hello-pear-cli",
+  "version": "0.1.0",
+  "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
+  "license": "MIT",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.js",
+  "upgrade": "pear://okug655xhy7g43cb1qyqhcdkgy7gtj9dowipogxx77mmirue4doo",
+  "scripts": {
+    "start": "bare index.js",
+    "start:no-updates": "bare index.js --no-updates",
+    "start:custom-storage": "bare index.js --storage /tmp/hello-pear-cli",
+    "build:standalone": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs index.js",
+    "build:darwin-arm64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-arm64 index.js",
+    "build:darwin-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-x64 index.js",
+    "build:linux-arm64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host linux-arm64 index.js",
+    "build:linux-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host linux-x64 index.js",
+    "build:win32-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host win32-x64 index.js",
+    "build:all": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-arm64 --host darwin-x64 --host linux-arm64 --host linux-x64 --host win32-x64 index.js"
+  },
+  "dependencies": {
+    "bare-fs": "^4.5.1",
+    "bare-os": "^3.9.0",
+    "bare-path": "^3.0.0",
+    "bare-storage": "^1.1.0",
+    "corestore": "^7.9.2",
+    "hyperswarm": "^4.17.0",
+    "paparam": "^1.10.1",
+    "pear-runtime": "^1.1.1"
+  },
+  "devDependencies": {
+    "bare-build": "^0.5.3"
+  }
+}
