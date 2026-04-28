@@ -10,15 +10,11 @@
     "test": "brittle-bare test/index.js",
     "lint": "prettier . --check && lunte",
     "start": "bare index.js",
-    "start:no-updates": "bare index.js --no-updates",
-    "start:custom-storage": "bare index.js --storage /tmp/hello-pear-cli",
-    "build:standalone": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs index.js",
-    "build:darwin-arm64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-arm64 index.js",
-    "build:darwin-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-x64 index.js",
-    "build:linux-arm64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host linux-arm64 index.js",
-    "build:linux-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host linux-x64 index.js",
-    "build:win32-x64": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host win32-x64 index.js",
-    "build:all": "mkdir -p ./out && bare-build --config ./bare-build.config.cjs --host darwin-arm64 --host darwin-x64 --host linux-arm64 --host linux-x64 --host win32-x64 index.js"
+    "build:darwin-arm64": "mkdir -p ./out/darwin-arm64 && bare-build --config ./bare-build.config.cjs --host darwin-arm64 index.js",
+    "build:darwin-x64": "mkdir -p ./out/darwin-x64 && bare-build --config ./bare-build.config.cjs --host darwin-x64 index.js",
+    "build:linux-arm64": "mkdir -p ./out/linux-arm64 && bare-build --config ./bare-build.config.cjs --host linux-arm64 index.js",
+    "build:linux-x64": "mkdir -p ./out/linux-x64 && bare-build --config ./bare-build.config.cjs --host linux-x64 index.js",
+    "build:win32-x64": "mkdir -p ./out/win32-x64 && bare-build --config ./bare-build.config.cjs --host win32-x64 index.js"
   },
   "dependencies": {
     "bare-fs": "^4.5.1",
