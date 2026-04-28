@@ -1,5 +1,4 @@
 const { command, flag } = require('paparam')
-const fs = require('bare-fs')
 const storageAPI = require('bare-storage')
 const pkg = require('./package.json')
 const os = require('bare-os')
@@ -20,11 +19,7 @@ const cmd = command(
 cmd.parse(global.Bare.argv.slice(2))
 
 const updates = cmd.flags.updates
-const isDev = (() => {
-  const argv0 = global.Bare && Array.isArray(Bare.argv) ? Bare.argv[0] || '' : ''
-  const base = path.basename(argv0)
-  return base === 'bare' || base === 'bare.exe' || argv0.includes('/node_modules/bare/')
-})()
+const isDev = path.basename(Bare.argv[0] || '').startsWith('bare')
 const storage = cmd.flags.storage || (isDev ? null : path.join(storageAPI.persistent(), appName))
 const message = cmd.flags.message || 'hello from cli main'
 const dir = storage || path.join(os.tmpdir(), 'pear', appName)
