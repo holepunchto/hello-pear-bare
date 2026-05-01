@@ -6,7 +6,7 @@ const path = require('bare-path')
 const { isWindows } = require('which-runtime')
 const Corestore = require('corestore')
 const Hyperswarm = require('hyperswarm')
-const Updater = require('pear-runtime-updater')
+const PearRuntime = require('pear-runtime')
 
 const appName = pkg.productName || pkg.name
 
@@ -45,7 +45,7 @@ function getRunningAppPath() {
 function getPear({ storage, updates, store, swarm }) {
   if (pear !== null) return pear
 
-  pear = new Updater({
+  pear = new PearRuntime({
     dir,
     app: getRunningAppPath(),
     updates,
@@ -61,25 +61,25 @@ function getPear({ storage, updates, store, swarm }) {
 
 pear = getPear({ storage, updates, store, swarm })
 if (updates !== false) {
-  pear.on('updating', () => console.log('[updater] getting new update'))
+  pear.updater.on('updating', () => console.log('[updater] getting new update'))
 
-  pear.on('updating-delta', (d) => console.log('[updater]', d))
+  pear.updater.on('updating-delta', (d) => console.log('[updater]', d))
 
-  pear.on('updated', async () => {
+  pear.updater.on('updated', async () => {
     console.log('[updater] update complete... appling')
-    await pear.applyUpdate()
+    await pear.updater.applyUpdate()
     console.log('[updater] applied update, restart to run latest version')
   })
 
   swarm.on('connection', (connection) => store.replicate(connection))
 
-  swarm.join(pear.drive.core.discoveryKey, {
+  swarm.join(pear.updater.drive.core.discoveryKey, {
     client: true,
     server: false
   })
 }
 
-pear.on('error', (err) => {
+pear.updater.on('error', (err) => {
   console.error('[pear-runtime:error]', err)
 })
 
