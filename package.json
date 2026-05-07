@@ -10,11 +10,11 @@
     "test": "brittle-bare test/index.js",
     "lint": "prettier . --check && lunte",
     "start": "bare index.js --no-updates",
-    "build:darwin-arm64": "bare-build --config ./bare-build.config.cjs --host darwin-arm64 --out ./out/darwin-arm64 bin.js",
-    "build:darwin-x64": "bare-build --config ./bare-build.config.cjs --host darwin-x64 --out ./out/darwin-x64 bin.js",
-    "build:linux-arm64": "bare-build --config ./bare-build.config.cjs --host linux-arm64 --out ./out/linux-arm64 bin.js",
-    "build:linux-x64": "bare-build --config ./bare-build.config.cjs --host linux-x64 --out ./out/linux-x64 bin.js",
-    "build:win32-x64": "bare-build --config ./bare-build.config.cjs --host win32-x64 --out ./out/win32-x64 bin.js"
+    "build:darwin-arm64": "bare-build --name hello-pear-bare --standalone --host darwin-arm64 --out ./out/darwin-arm64 bin.js",
+    "build:darwin-x64": "bare-build --name hello-pear-bare --standalone --host darwin-x64 --out ./out/darwin-x64 bin.js",
+    "build:linux-arm64": "bare-build --name hello-pear-bare --standalone --host linux-arm64 --out ./out/linux-arm64 bin.js",
+    "build:linux-x64": "bare-build --name hello-pear-bare --standalone --host linux-x64 --out ./out/linux-x64 bin.js",
+    "build:win32-x64": "bare-build --name hello-pear-bare --standalone --host win32-x64 --out ./out/win32-x64 bin.js"
   },
   "dependencies": {
     "bare-os": "^3.9.0",
