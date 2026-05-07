@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
-  "main": "index.js",
+  "bin": "bin.js",
   "upgrade": "pear://okug655xhy7g43cb1qyqhcdkgy7gtj9dowipogxx77mmirue4doo",
   "scripts": {
     "format": "prettier . --write",
     "test": "brittle-bare test/index.js",
     "lint": "prettier . --check && lunte",
     "start": "bare index.js --no-updates",
-    "build:darwin-arm64": "bare-build --config ./bare-build.config.cjs --host darwin-arm64 --out ./out/darwin-arm64 index.js",
-    "build:darwin-x64": "bare-build --config ./bare-build.config.cjs --host darwin-x64 --out ./out/darwin-x64 index.js",
-    "build:linux-arm64": "bare-build --config ./bare-build.config.cjs --host linux-arm64 --out ./out/linux-arm64 index.js",
-    "build:linux-x64": "bare-build --config ./bare-build.config.cjs --host linux-x64 --out ./out/linus-x64 index.js",
-    "build:win32-x64": "bare-build --config ./bare-build.config.cjs --host win32-x64 --out ./out/win32-x64 index.js"
+    "build:darwin-arm64": "bare-build --config ./bare-build.config.cjs --host darwin-arm64 --out ./out/darwin-arm64 bin.js",
+    "build:darwin-x64": "bare-build --config ./bare-build.config.cjs --host darwin-x64 --out ./out/darwin-x64 bin.js",
+    "build:linux-arm64": "bare-build --config ./bare-build.config.cjs --host linux-arm64 --out ./out/linux-arm64 bin.js",
+    "build:linux-x64": "bare-build --config ./bare-build.config.cjs --host linux-x64 --out ./out/linux-x64 bin.js",
+    "build:win32-x64": "bare-build --config ./bare-build.config.cjs --host win32-x64 --out ./out/win32-x64 bin.js"
   },
   "dependencies": {
     "bare-os": "^3.9.0",

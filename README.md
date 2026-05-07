@@ -8,7 +8,7 @@ Pear Runtime hello world boilerplate for a CLI project using [**Bare**](https://
 npm install
 ```
 
-## Run
+## Development
 
 ```sh
 npm start
@@ -28,11 +28,13 @@ npm start -- --storage ./storageDir
 
 ## Build
 
-Build a standalone for a given arch (output at out/<arch>).
+Build a standalone for a given arch (output at `out/<arch>`).
 
 ```sh
 npm run build:<arch>
 ```
+
+Pass `/out/<arch>` dirs to the [`pear-build`](https://github.com/holepunchto/pear-build) command to create a Deployment Folder for the updater to use.
 
 ## Updater Flow
 

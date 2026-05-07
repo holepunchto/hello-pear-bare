@@ -23,7 +23,7 @@ const isDev = path.basename(Bare.argv[0] || '').startsWith('bare')
 const storage = cmd.flags.storage || (isDev ? null : path.join(storageAPI.persistent(), appName))
 const message = cmd.flags.message || 'hello from cli main'
 const dir = storage || path.join(os.tmpdir(), 'pear', appName)
-const store = new Corestore(path.join(dir, 'pear-runtime/corestore'))
+const store = new Corestore(path.join(dir, 'pear-runtime', 'corestore'))
 const swarm = new Hyperswarm()
 let pear = null
 
@@ -41,7 +41,7 @@ function getRunningAppPath() {
   return null
 }
 
-function getPear({ storage, updates, store, swarm }) {
+function getPear({ updates, store, swarm }) {
   if (pear !== null) return pear
 
   pear = new PearRuntime({
@@ -58,7 +58,7 @@ function getPear({ storage, updates, store, swarm }) {
   return pear
 }
 
-pear = getPear({ storage, updates, store, swarm })
+pear = getPear({ updates, store, swarm })
 if (updates !== false) {
   pear.updater.on('updating', () => console.log('[updater] getting new update'))
 
