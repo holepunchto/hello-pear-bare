@@ -1,4 +1,4 @@
-# hello-pear-cli
+# hello-pear-bare
 
 Pear Runtime hello world boilerplate for a CLI project using [**Bare**](https://github.com/holepunchto/bare) with OTA updates and standalone binary builds via [`bare-build`](https://github.com/holepunchto/bare-build).
 
