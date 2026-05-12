@@ -36,15 +36,10 @@ function getRunningAppPath() {
     return path.resolve(Bare.argv[0])
   }
 
-  if (typeof process !== 'undefined' && process.execPath) return process.execPath
-
   return null
 }
 
-function getPear({ updates, store, swarm }) {
-  if (pear !== null) return pear
-
-  pear = new PearRuntime({
+pear = new PearRuntime({
     dir,
     app: getRunningAppPath(),
     updates,
@@ -55,10 +50,6 @@ function getPear({ updates, store, swarm }) {
     swarm
   })
 
-  return pear
-}
-
-pear = getPear({ updates, store, swarm })
 if (updates !== false) {
   pear.updater.on('updating', () => console.log('[updater] getting new update'))
 
