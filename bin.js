@@ -40,15 +40,15 @@ function getRunningAppPath() {
 }
 
 pear = new PearRuntime({
-    dir,
-    app: getRunningAppPath(),
-    updates,
-    version: pkg.version,
-    upgrade: pkg.upgrade,
-    name: appName,
-    store,
-    swarm
-  })
+  dir,
+  app: getRunningAppPath(),
+  updates,
+  version: pkg.version,
+  upgrade: pkg.upgrade,
+  name: appName,
+  store,
+  swarm
+})
 
 if (updates !== false) {
   pear.updater.on('updating', () => console.log('[updater] getting new update'))
