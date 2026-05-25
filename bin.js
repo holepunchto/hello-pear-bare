@@ -8,6 +8,7 @@ const Hyperswarm = require('hyperswarm')
 const PearRuntime = require('pear-runtime')
 
 const appName = pkg.productName || pkg.name
+const updateArtifactName = os.platform() === 'win32' && pkg.bin ? `${appName}.exe` : appName
 
 const cmd = command(
   appName,
@@ -45,7 +46,7 @@ pear = new PearRuntime({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: appName,
+  name: updateArtifactName,
   store,
   swarm
 })
@@ -73,7 +74,12 @@ pear.on('error', (err) => {
   console.error('[pear-runtime:error]', err)
 })
 
-const worker = PearRuntime.run('./workers/main.js')
+const workerEntry =
+  typeof require.asset === 'function'
+    ? require.asset('./workers/main.js') // TODO: fix (assets seem to be missin otherwise)
+    : require.resolve('./workers/main.js')
+
+const worker = PearRuntime.run(workerEntry)
 
 worker.stdout.on('data', (data) => {
   console.log(`[worker:stdout] ${data}`)

@@ -4,7 +4,7 @@
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
   "bin": "bin.js",
-  "upgrade": "pear://okug655xhy7g43cb1qyqhcdkgy7gtj9dowipogxx77mmirue4doo",
+  "upgrade": "pear://88yznbo3kewkdfimjinkrq3u7gi7ycwkc69xsi6pfnn8bxo95oay",
   "scripts": {
     "format": "prettier . --write",
     "test": "brittle-bare test/index.js",
@@ -15,6 +15,8 @@
     "make:linux-arm64": "bare-build --name hello-pear-bare --standalone --host linux-arm64 --out ./out/linux-arm64 bin.js",
     "make:linux-x64": "bare-build --name hello-pear-bare --standalone --host linux-x64 --out ./out/linux-x64 bin.js",
     "make:win32-x64": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-Win32X64.ps1",
+    "install:win32-x64": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-Win32X64.ps1",
+    "setup:win32-x64": "npm run make:win32-x64 && npm run install:win32-x64",
     "make:win32-x64:msix": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Build-Win32X64.ps1 -Msix"
   },
   "dependencies": {
