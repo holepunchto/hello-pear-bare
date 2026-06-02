@@ -1,5 +1,5 @@
 const { test } = require('brittle')
 
-test('works', (t) => {
+test('REMOVE ME', (t) => {
   t.pass()
 })
