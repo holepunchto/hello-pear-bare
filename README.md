@@ -71,12 +71,6 @@ Enable updates for local flow testing:
 npm start -- --updates
 ```
 
-Send a custom worker message:
-
-```sh
-npm start -- --message "hello from dev"
-```
-
 ## Architecture
 
 ### Updates
@@ -91,7 +85,7 @@ npm start -- --no-updates
 
 ### Workers
 
-The main CLI runs a worker with `PearRuntime.run('./workers/main.js')` and communicates over IPC.
+The main CLI starts `workers/main.js` as a Bare sidecar and communicates with it over framed IPC.
 
 ## Peer-to-Peer Deployments
 
