@@ -9,7 +9,7 @@ const { platform, arch } = process
 
 if (!supportedPlatforms.has(platform) || !supportedArchs.has(arch)) {
   console.error(
-    `Unsupported build host: ${platform}-${arch}. Supported hosts: darwin-x64, darwin-arm64, linux-x64, linux-arm64, win32-x64.`
+    `Unsupported build host: ${platform}-${arch}. Supported hosts: darwin-x64, darwin-arm64, linux-x64, linux-arm64, win32-x64, win32-arm64.`
   )
   process.exit(1)
 }
