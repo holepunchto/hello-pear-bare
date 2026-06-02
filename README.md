@@ -72,12 +72,6 @@ Enable updates for local flow testing:
 npm start -- --updates
 ```
 
-Send a custom worker message:
-
-```sh
-npm start -- --message "hello from dev"
-```
-
 ## Architecture
 
 ### Updates

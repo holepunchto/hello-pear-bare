@@ -12,8 +12,7 @@ const appName = pkg.productName || pkg.name
 const cmd = command(
   appName,
   flag('--storage <dir>', 'custom storage directory for pear-runtime'),
-  flag('--no-updates', 'disable OTA updates for this run'),
-  flag('--message <text>', 'message sent to worker IPC stream')
+  flag('--no-updates', 'disable OTA updates for this run')
 )
 
 cmd.parse(global.Bare.argv.slice(2))
@@ -21,11 +20,9 @@ cmd.parse(global.Bare.argv.slice(2))
 const updates = cmd.flags.updates
 const isDev = path.basename(Bare.argv[0] || '').startsWith('bare')
 const storage = cmd.flags.storage || (isDev ? null : path.join(storageAPI.persistent(), appName))
-const message = cmd.flags.message || 'hello from cli main'
 const dir = storage || path.join(os.tmpdir(), 'pear', appName)
 const store = new Corestore(path.join(dir, 'pear-runtime', 'corestore'))
 const swarm = new Hyperswarm()
-let pear = null
 
 console.log(`${appName} v${pkg.version}`)
 console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
@@ -39,7 +36,7 @@ function getRunningAppPath() {
   return null
 }
 
-pear = new PearRuntime({
+const pear = new PearRuntime({
   dir,
   app: getRunningAppPath(),
   updates,
@@ -91,7 +88,7 @@ worker.on('exit', (code) => {
   console.log(`[worker] exited with code ${code}`)
 })
 
-worker.write(Buffer.from(message))
+worker.write(Buffer.from('hello from cli main'))
 
 let tearingDown = false
 async function teardown(code = 0) {
@@ -106,8 +103,9 @@ async function teardown(code = 0) {
   global.Bare.exit(code)
 }
 
-for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP', 'SIGQUIT']) {
-  global.Bare.on(sig, () => teardown(0))
-}
+global.Bare.on('SIGHUP', () => teardown(129))
+global.Bare.on('SIGINT', () => teardown(130))
+global.Bare.on('SIGQUIT', () => teardown(131))
+global.Bare.on('SIGTERM', () => teardown(143))
 
 console.log('CLI ready. Press Ctrl+C to stop.')
