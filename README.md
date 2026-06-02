@@ -13,13 +13,14 @@ End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunch
 - OS Support
 - Requirements
 - Development
-  - Install
+  - Install Dependencies
   - Create an upgrade link
   - Start
 - Architecture
   - Updates
   - Workers
 - Peer-to-Peer Deployments
+- Installing Distributables
 - Scripts
 - Project Structure
 - Troubleshooting
@@ -37,7 +38,7 @@ End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunch
 
 ## Development
 
-### Install
+### Install Dependencies
 
 ```sh
 npm install
@@ -119,6 +120,14 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 - `workers/main.js` - Bare worker example
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
+
+## Installing Distributables
+
+Once the `pear://<key>` upgrade link is seeding the build deployment folder the CLI standalone binary can be installed peer-to-peer directly onto the system with Pear:
+
+```sh
+npx pear-install pear://<key>
+```
 
 ## Troubleshooting
 
