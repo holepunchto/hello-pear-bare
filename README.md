@@ -122,7 +122,7 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 
 ## Installing Distributables
 
-Once the `pear://<key>`  upgrade link is seeding the build deployment folder the CLI standalone binary can be installed peer-to-peer directly onto the system with Pear:
+Once the `pear://<key>` upgrade link is seeding the build deployment folder the CLI standalone binary can be installed peer-to-peer directly onto the system with Pear:
 
 ```sh
 npx pear-install pear://<key>
