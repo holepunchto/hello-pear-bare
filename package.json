@@ -15,6 +15,7 @@
     "make:darwin-x64": "bare-build --name hello-pear-bare --standalone --host darwin-x64 --out ./out/darwin-x64 bin.js",
     "make:linux-arm64": "bare-build --name hello-pear-bare --standalone --host linux-arm64 --out ./out/linux-arm64 bin.js",
     "make:linux-x64": "bare-build --name hello-pear-bare --standalone --host linux-x64 --out ./out/linux-x64 bin.js",
+    "make:win32-arm64": "bare-build --name hello-pear-bare --standalone --host win32-arm64 --out ./out/win32-arm64 bin.js",
     "make:win32-x64": "bare-build --name hello-pear-bare --standalone --host win32-x64 --out ./out/win32-x64 bin.js"
   },
   "dependencies": {

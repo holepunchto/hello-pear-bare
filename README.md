@@ -26,9 +26,9 @@ End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunch
 
 ## OS Support
 
-- macOS
-- Linux
-- Windows
+- **macOS** — arm64, x64
+- **Linux** — arm64, x64
+- **Windows** — arm64, x64
 
 ## Requirements
 
@@ -110,6 +110,7 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 - `npm run make:darwin-x64` - build standalone to `out/darwin-x64`
 - `npm run make:linux-arm64` - build standalone to `out/linux-arm64`
 - `npm run make:linux-x64` - build standalone to `out/linux-x64`
+- `npm run make:win32-arm64` - build standalone to `out/win32-arm64`
 - `npm run make:win32-x64` - build standalone to `out/win32-x64`
 
 ## Project Structure
