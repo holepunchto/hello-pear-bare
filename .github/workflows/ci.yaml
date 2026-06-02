@@ -11,14 +11,38 @@ jobs:
     steps:
       - uses: holepunchto/actions/node-base@v1
       - run: npm run lint
-  test:
+
+  build:
+    name: ${{ matrix.host }}
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
-            platform: linux
+            host: linux-x64
+          - os: ubuntu-24.04-arm
+            host: linux-arm64
+          - os: macos-latest
+            host: darwin-arm64
+          - os: macos-15-intel
+            host: darwin-x64
+          - os: windows-latest
+            host: win32-x64
+          - os: windows-11-arm
+            host: win32-arm64
     runs-on: ${{ matrix.os }}
-    name: Test / ${{ matrix.platform }}
+    timeout-minutes: 10
     steps:
-      - uses: holepunchto/actions/bare-base@v1
-      - run: npm test
+      - name: Setup repo
+        uses: holepunchto/actions/.github/steps/setup-repo@v1
+
+      - name: Install w/ dev deps
+        run: npm install
+
+      - name: Build Local Runtime
+        run: npm run make
+
+      - name: Install Bare
+        run: npm i -g bare-runtime
+
+      - name: Test
+        run: npm test
