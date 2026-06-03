@@ -14,6 +14,7 @@ require('./textarea')
 require('./table')
 require('./stopwatch')
 require('./timer')
+require('./filepicker')
 
 test('works', (t) => {
   t.pass()
