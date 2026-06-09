@@ -6,6 +6,7 @@ const path = require('bare-path')
 const Corestore = require('corestore')
 const Hyperswarm = require('hyperswarm')
 const PearRuntime = require('pear-runtime')
+const { isWindows } = require('which-runtime')
 
 const appName = pkg.productName || pkg.name
 
@@ -38,7 +39,7 @@ const pear = new PearRuntime({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: appName,
+  name: isWindows ? appName + '.exe' : appName,
   store,
   swarm
 })
