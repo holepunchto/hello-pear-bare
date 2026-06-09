@@ -127,6 +127,7 @@ npx pear-install pear://<key>
 - This template does not implement app-level data persistence; it is a minimal CLI + updater example.
 
 <!-- Reference Links -->
+
 [pear-docs]: https://docs.pears.com
 [pear-runtime]: https://github.com/holepunchto/pear-runtime
 [Bare]: https://github.com/holepunchto/bare
