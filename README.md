@@ -1,11 +1,10 @@
 # hello-pear-bare
 
-> Pear Hello World for Bare CLI with `pear-runtime`
+> Pear Hello World for Standalone Bare Processes with `pear-runtime`
 
-End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunchto/pear-runtime) into a [Bare](https://github.com/holepunchto/bare) CLI with peer-to-peer OTA update support and standalone builds.
+End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunchto/pear-runtime) into a Standalone [Bare](https://github.com/holepunchto/bare) Process with peer-to-peer OTA update support and standalone builds.
 
 - Peer-to-Peer Over-the-Air updates
-- Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`](https://github.com/holepunchto/bare-build)
 
 ## Table of Contents
@@ -18,7 +17,6 @@ End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunch
   - Start
 - Architecture
   - Updates
-  - Workers
 - Peer-to-Peer Deployments
 - Installing Distributables
 - Scripts
@@ -84,10 +82,6 @@ Per-run disable updates:
 npm start -- --no-updates
 ```
 
-### Workers
-
-The main CLI runs a worker with `PearRuntime.run('./workers/main.js')` and communicates over IPC.
-
 ## Peer-to-Peer Deployments
 
 Set the `upgrade` field in `package.json` to your distribution drive link, then follow the default flow from section 4 onward:
@@ -96,7 +90,7 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 
 ## Scripts
 
-- `npm start` - run the Bare CLI in dev mode (`bare bin.js --no-updates`)
+- `npm start` - run the Bare Process in dev mode (`bare bin.js --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
@@ -110,14 +104,13 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 
 ## Project Structure
 
-- `bin.js` - CLI entrypoint and runtime wiring
-- `workers/main.js` - Bare worker example
+- `bin.js` - entrypoint and runtime wiring
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
 
 ## Installing Distributables
 
-Once the `pear://<key>` upgrade link is seeding the build deployment folder the CLI standalone binary can be installed peer-to-peer directly onto the system with Pear:
+Once the `pear://<key>` upgrade link is seeding the build deployment folder the standalone binary can be installed peer-to-peer directly onto the system with Pear:
 
 ```sh
 npx pear-install pear://<key>
