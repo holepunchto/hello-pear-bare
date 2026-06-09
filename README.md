@@ -5,7 +5,7 @@
 End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
-- Peer-to-Peer Over-the-Air updates through [`pear-runtime`][pear-runtime]
+- Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime]
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
 
 ## Table of Contents
