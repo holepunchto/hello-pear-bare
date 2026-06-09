@@ -29,11 +29,7 @@ console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
 
 function getRunningAppPath() {
   if (isDev) return null
-  if (global.Bare && Array.isArray(Bare.argv) && typeof Bare.argv[0] === 'string') {
-    return path.resolve(Bare.argv[0])
-  }
-
-  return null
+  return os.execPath()
 }
 
 const pear = new PearRuntime({
@@ -70,7 +66,7 @@ pear.on('error', (err) => {
   console.error('[pear-runtime:error]', err)
 })
 
-const worker = PearRuntime.run('./workers/main.js')
+const worker = PearRuntime.run(require.resolve('./workers/main.js'))
 
 worker.stdout.on('data', (data) => {
   console.log(`[worker:stdout] ${data}`)
