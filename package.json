@@ -25,13 +25,11 @@
     "corestore": "^7.9.2",
     "hyperswarm": "^4.17.0",
     "paparam": "^1.10.1",
-    "pear-runtime": "1.1.1"
-  },
-  "overrides": {
-    "bare-sidecar": "0.4.6"
+    "pear-runtime": "^1.1.4",
+    "which-runtime": "^1.4.0"
   },
   "devDependencies": {
-    "bare-build": "^0.5.3",
+    "bare-build": "^1.0.1",
     "brittle": "^3.19.0",
     "lunte": "^1.2.0",
     "prettier": "^3.6.2",

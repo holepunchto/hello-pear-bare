@@ -2,6 +2,7 @@ const { command, flag } = require('paparam')
 const storageAPI = require('bare-storage')
 const pkg = require('./package.json')
 const os = require('bare-os')
+const { isWindows } = require('which-runtime')
 const path = require('bare-path')
 const Corestore = require('corestore')
 const Hyperswarm = require('hyperswarm')
@@ -29,11 +30,7 @@ console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
 
 function getRunningAppPath() {
   if (isDev) return null
-  if (global.Bare && Array.isArray(Bare.argv) && typeof Bare.argv[0] === 'string') {
-    return path.resolve(Bare.argv[0])
-  }
-
-  return null
+  return os.execPath()
 }
 
 const pear = new PearRuntime({
@@ -42,7 +39,7 @@ const pear = new PearRuntime({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: appName,
+  name: isWindows ? appName + '.exe' : appName,
   store,
   swarm
 })
@@ -70,33 +67,10 @@ pear.on('error', (err) => {
   console.error('[pear-runtime:error]', err)
 })
 
-const worker = PearRuntime.run('./workers/main.js')
-
-worker.stdout.on('data', (data) => {
-  console.log(`[worker:stdout] ${data}`)
-})
-
-worker.stderr.on('data', (data) => {
-  console.error(`[worker:stderr] ${data}`)
-})
-
-worker.on('data', (data) => {
-  console.log(`[worker:ipc] ${data}\n`)
-})
-
-worker.on('exit', (code) => {
-  console.log(`[worker] exited with code ${code}`)
-})
-
-worker.write(Buffer.from('hello from cli main'))
-
 let tearingDown = false
 async function teardown(code = 0) {
   if (tearingDown) return
   tearingDown = true
-  try {
-    worker.destroy()
-  } catch {}
   try {
     await pear?.close()
   } catch {}
