@@ -2,26 +2,27 @@
 
 > Pear Hello World for Standalone Bare Processes with `pear-runtime`
 
-End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunchto/pear-runtime) into a Standalone [Bare](https://github.com/holepunchto/bare) Process with peer-to-peer OTA update support.
+End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
 
+- Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates
-- Cross-platform standalone distributables via [`bare-build`](https://github.com/holepunchto/bare-build)
+- Cross-platform standalone distributables via [`bare-build`][bare-build]
 
 ## Table of Contents
 
-- OS Support
-- Requirements
-- Development
-  - Install Dependencies
-  - Create an upgrade link
-  - Start
-- Architecture
-  - Updates
-- Peer-to-Peer Deployments
-- Installing Distributables
-- Scripts
-- Project Structure
-- Troubleshooting
+- [OS Support](#os-support)
+- [Requirements](#requirements)
+- [Development](#development)
+  - [Install Dependencies](#install-dependencies)
+  - [Create an upgrade link](#create-an-upgrade-link)
+  - [Start](#start)
+- [Architecture](#architecture)
+  - [Updates](#updates)
+- [Peer-to-Peer Deployments](#peer-to-peer-deployments)
+- [Installing Distributables](#installing-distributables)
+- [Scripts](#scripts)
+- [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
 
 ## OS Support
 
@@ -31,8 +32,8 @@ End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunch
 
 ## Requirements
 
-- `npm` via [Node.js](https://nodejs.org/)
-- [pear](https://docs.pears.com/) - `npx pear`
+- `npm` via [Nodejs]
+- [pear][pear-docs] - `npx pear`
 
 ## Development
 
@@ -84,6 +85,8 @@ npm start -- --no-updates
 
 ## Peer-to-Peer Deployments
 
+Use the [`pear`][pear-docs] CLI to deploy applications.
+
 Set the `upgrade` field in `package.json` to your distribution drive link, then follow the default flow from section 4 onward:
 
 [hello-pear-electron: 4. Build Deployment Directory and onward](https://github.com/holepunchto/hello-pear-electron#4-build-deployment-directory-)
@@ -122,3 +125,10 @@ npx pear-install pear://<key>
 - If updates do not trigger, verify `package.json` contains a valid `upgrade` Pear link and that peers are seeding the target drive.
 - If `npm run make` fails on unsupported hosts, run a specific `make:<platform>-<arch>` script or build on a supported host.
 - This template does not implement app-level data persistence; it is a minimal CLI + updater example.
+
+<!-- Reference Links -->
+[pear-docs]: https://docs.pears.com
+[pear-runtime]: https://github.com/holepunchto/pear-runtime
+[Bare]: https://github.com/holepunchto/bare
+[nodejs]: https://nodejs.org
+[bare-build]: https://github.com/holepunchto/bare-build
