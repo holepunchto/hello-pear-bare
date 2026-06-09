@@ -2,7 +2,7 @@
 
 > Pear Hello World for Standalone Bare Processes with `pear-runtime`
 
-End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunchto/pear-runtime) into a Standalone [Bare](https://github.com/holepunchto/bare) Process with peer-to-peer OTA update support and standalone builds.
+End-to-end boilerplate for embedding [pear-runtime](https://github.com/holepunchto/pear-runtime) into a Standalone [Bare](https://github.com/holepunchto/bare) Process with peer-to-peer OTA update support.
 
 - Peer-to-Peer Over-the-Air updates
 - Cross-platform standalone distributables via [`bare-build`](https://github.com/holepunchto/bare-build)
@@ -88,6 +88,14 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 
 [hello-pear-electron: 4. Build Deployment Directory and onward](https://github.com/holepunchto/hello-pear-electron#4-build-deployment-directory-)
 
+## Installing Distributables
+
+Once the `pear://<key>` upgrade link is seeding the build deployment folder the standalone binary can be installed peer-to-peer directly onto the system with Pear:
+
+```sh
+npx pear-install pear://<key>
+```
+
 ## Scripts
 
 - `npm start` - run the Bare Process in dev mode (`bare bin.js --no-updates`)
@@ -107,14 +115,6 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 - `bin.js` - entrypoint and runtime wiring
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
-
-## Installing Distributables
-
-Once the `pear://<key>` upgrade link is seeding the build deployment folder the standalone binary can be installed peer-to-peer directly onto the system with Pear:
-
-```sh
-npx pear-install pear://<key>
-```
 
 ## Troubleshooting
 
