@@ -50,7 +50,7 @@ if (updates !== false) {
   pear.updater.on('updating-delta', (d) => console.log('[updater]', d))
 
   pear.updater.on('updated', async () => {
-    console.log('[updater] update complete... appling')
+    console.log('[updater] update complete... applying')
     await pear.updater.applyUpdate()
     console.log('[updater] applied update, restart to run latest version')
   })
