@@ -32,7 +32,7 @@ End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Pro
 
 ## Requirements
 
-- `npm` via [Nodejs]
+- `npm` via [Node.js][nodejs]
 - [pear][pear-docs] - `npx pear`
 
 ## Development
