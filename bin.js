@@ -2,6 +2,7 @@ const { command, flag } = require('paparam')
 const storageAPI = require('bare-storage')
 const pkg = require('./package.json')
 const os = require('bare-os')
+const { isWindows } = require('which-runtime')
 const path = require('bare-path')
 const PearRuntime = require('pear-runtime')
 const FramedStream = require('framed-stream')
@@ -26,30 +27,18 @@ console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
 
 function getRunningAppPath() {
   if (isDev) return null
-  if (global.Bare && Array.isArray(Bare.argv) && typeof Bare.argv[0] === 'string') {
-    return path.resolve(Bare.argv[0])
-  }
-
-  return null
+  return os.execPath()
 }
 
-const worker = PearRuntime.run('./workers/main.js', [
+const worker = PearRuntime.run(require.resolve('./workers/main.js'), [
   dir,
   getRunningAppPath() || '',
   String(updates),
   pkg.version,
   pkg.upgrade,
-  appName
+  isWindows ? appName + '.exe' : appName
 ])
 const pipe = new FramedStream(worker)
-
-worker.stdout.on('data', (data) => {
-  console.log(`[worker:stdout] ${data}`)
-})
-
-worker.stderr.on('data', (data) => {
-  console.error(`[worker:stderr] ${data}`)
-})
 
 pipe.on('data', async (data) => {
   const event = data.toString()
