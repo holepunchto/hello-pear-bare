@@ -35,7 +35,7 @@ const endWroker = startUpdater({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: isWindows ? appName + '.exe' : appName,
+  name: isWindows ? appName + '.exe' : appName
 })
 
 let tearingDown = false
