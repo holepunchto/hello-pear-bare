@@ -11,7 +11,7 @@ End-to-end boilerplate for embedding [pear-runtime] into the [Bare] worker of a 
 
 ## Variants
 
-- (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` in a Bare worker thread.
+- (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` in a Bare worker.
 - [`single-process`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-process): workerless with `pear-runtime` updates in the main and only process.
 
 ## Table of Contents
