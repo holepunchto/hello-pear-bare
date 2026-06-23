@@ -1,10 +1,10 @@
-const { command, flag } = require('paparam')
-const storageAPI = require('bare-storage')
-const pkg = require('./package.json')
-const os = require('bare-os')
-const { isWindows } = require('which-runtime')
-const path = require('bare-path')
-const App = require('./index.js')
+import { command, flag } from 'paparam'
+import storageAPI from 'bare-storage'
+import pkg from './package.json'
+import os from 'bare-os'
+import { isWindows } from 'which-runtime'
+import path from 'bare-path'
+import App from './index.js'
 
 const appName = pkg.productName || pkg.name
 
@@ -51,10 +51,11 @@ global.Bare.on('SIGINT', () => exit(130))
 global.Bare.on('SIGQUIT', () => exit(131))
 global.Bare.on('SIGTERM', () => exit(143))
 
-app.ready().then(
+await app.ready().then(
   () => console.log('\nCLI ready. Press Ctrl+C to stop.\n'),
-  (err) => {
+  async (err) => {
     console.error('[app:error]', err)
-    teardown(1)
+    await app.close().catch(() => {})
+    Bare.exit(1)
   }
 )

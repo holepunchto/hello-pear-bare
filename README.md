@@ -101,7 +101,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
-- `npm start` - run the Bare Process in dev mode (`bare bin.js --no-updates`)
+- `npm start` - run the Bare Process in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
@@ -115,7 +115,7 @@ npx pear-install pear://<key>
 
 ## Project Structure
 
-- `bin.js` - entrypoint and runtime wiring
+- `bin.mjs` - entrypoint and runtime wiring
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
 
