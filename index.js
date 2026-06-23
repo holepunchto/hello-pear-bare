@@ -74,4 +74,9 @@ module.exports = class App extends ReadyResource {
     if (this.pipe === null) return
     this.pipe.write(message)
   }
+
+  async exit(code = 0) {
+    Bare.exitCode = code
+    await this.close()
+  }
 }

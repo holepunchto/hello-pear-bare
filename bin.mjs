@@ -1,9 +1,9 @@
 import { command, flag } from 'paparam'
-import storageAPI from 'bare-storage'
-import pkg from './package.json'
+import { persistent } from 'bare-storage'
 import os from 'bare-os'
 import { isWindows } from 'which-runtime'
 import path from 'bare-path'
+import pkg from './package.json'
 import App from './index.js'
 
 const appName = pkg.productName || pkg.name
@@ -14,11 +14,11 @@ const cmd = command(
   flag('--no-updates', 'disable OTA updates for this run')
 )
 
-cmd.parse(global.Bare.argv.slice(2))
+cmd.parse(Bare.argv.slice(2))
 
 const updates = cmd.flags.updates
 const isDev = path.basename(Bare.argv[0]) === 'bare'
-const storage = cmd.flags.storage || (isDev ? null : path.join(storageAPI.persistent(), appName))
+const storage = cmd.flags.storage || (isDev ? null : path.join(persistent(), appName))
 const dir = storage || path.join(os.tmpdir(), 'pear', appName)
 
 console.log(`${appName} v${pkg.version}`)
@@ -41,21 +41,16 @@ app.on('update-applied', () =>
 )
 app.on('error', (err) => console.error('[app:error]', err))
 
-async function exit(code = 0) {
-  Bare.exitCode = code
-  await app.close()
+Bare.on('SIGHUP', () => app.exit(129))
+Bare.on('SIGINT', () => app.exit(130))
+Bare.on('SIGQUIT', () => app.exit(131))
+Bare.on('SIGTERM', () => app.exit(143))
+
+try {
+  await app.ready()
+  console.log('\nCLI ready. Press Ctrl+C to stop.\n')
+} catch (err) {
+  console.error('[app:error]', err)
+  await app.close().catch(() => {})
+  Bare.exit(1)
 }
-
-global.Bare.on('SIGHUP', () => exit(129))
-global.Bare.on('SIGINT', () => exit(130))
-global.Bare.on('SIGQUIT', () => exit(131))
-global.Bare.on('SIGTERM', () => exit(143))
-
-await app.ready().then(
-  () => console.log('\nCLI ready. Press Ctrl+C to stop.\n'),
-  async (err) => {
-    console.error('[app:error]', err)
-    await app.close().catch(() => {})
-    Bare.exit(1)
-  }
-)

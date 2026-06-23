@@ -1,11 +1,12 @@
 # hello-pear-bare
 
-> Pear Hello World for Standalone Bare Processes with `pear-runtime`
+> Pear Hello World for Standalone Bare Processes with `pear-runtime` worker
 
-End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
+End-to-end boilerplate for embedding [pear-runtime] into the worker of a [Bare] CLI with peer-to-peer OTA update support.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime] module
+- Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
 
 ## Table of Contents
@@ -18,6 +19,7 @@ End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Pro
   - [Start](#start)
 - [Architecture](#architecture)
   - [Updates](#updates)
+  - [Workers](#workers)
 - [Peer-to-Peer Deployments](#peer-to-peer-deployments)
 - [Installing Distributables](#installing-distributables)
 - [Scripts](#scripts)
@@ -75,13 +77,19 @@ npm start -- --updates
 
 ### Updates
 
-Updates are handled through `pear-runtime` and the configured `upgrade` link in `package.json`.
+Updates are managed by the `App` class in `index.js`, which wraps the updater lifecycle as a ready resource and emits update events for `bin.mjs` to log.
+
+The worker uses `pear-runtime` and the configured `upgrade` link in `package.json`.
 
 Per-run disable updates:
 
 ```sh
 npm start -- --no-updates
 ```
+
+### Workers
+
+The main CLI starts `workers/main.js` as a Bare sidecar and communicates with it over framed IPC.
 
 ## Peer-to-Peer Deployments
 
@@ -93,7 +101,7 @@ Set the `upgrade` field in `package.json` to your distribution drive link, then 
 
 ## Installing Distributables
 
-Once the `pear://<key>` upgrade link is seeding the build deployment folder the standalone binary can be installed peer-to-peer directly onto the system with Pear:
+Once the `pear://<key>` upgrade link is seeding the build deployment folder the CLI standalone binary can be installed peer-to-peer directly onto the system with Pear:
 
 ```sh
 npx pear-install pear://<key>
@@ -101,7 +109,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
-- `npm start` - run the Bare Process in dev mode (`bare bin.mjs --no-updates`)
+- `npm start` - run the Bare CLI in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
@@ -115,7 +123,9 @@ npx pear-install pear://<key>
 
 ## Project Structure
 
-- `bin.mjs` - entrypoint and runtime wiring
+- `bin.mjs` - CLI entrypoint and runtime wiring
+- `index.js` - update resource used by the entrypoint
+- `workers/main.js` - Bare worker example
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
 
