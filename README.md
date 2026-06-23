@@ -9,6 +9,11 @@ End-to-end boilerplate for embedding [pear-runtime] into the worker of a [Bare] 
 - Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
 
+## Variants
+
+- (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` in a Bare worker thread.
+- [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variants/single-thread): runs `pear-runtime` in the main thread.
+
 ## Table of Contents
 
 - [OS Support](#os-support)
