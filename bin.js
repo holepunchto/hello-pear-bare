@@ -38,7 +38,6 @@ const updatesResource = new Updates({
   name: isWindows ? appName + '.exe' : appName
 })
 
-updatesResource.on('storage', (storage) => console.log('Application storage:', storage))
 updatesResource.on('updating', () => console.log('[updater] getting new update'))
 updatesResource.on('updating-delta', (delta) => console.log('[updater]', delta))
 updatesResource.on('updated', () => console.log('[updater] update complete... applying'))
@@ -61,7 +60,7 @@ global.Bare.on('SIGQUIT', () => teardown(131))
 global.Bare.on('SIGTERM', () => teardown(143))
 
 updatesResource.ready().then(
-  () => console.log('CLI ready. Press Ctrl+C to stop.'),
+  () => console.log('\nCLI ready. Press Ctrl+C to stop.\n'),
   (err) => {
     console.error('[updater:error]', err)
     teardown(1)

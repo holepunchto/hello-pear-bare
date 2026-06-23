@@ -4,7 +4,7 @@
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
   "bin": "bin.js",
-  "upgrade": "pear://ntitzxk8761isemys599wyk1jfw5qe8ho9b7yk7sd6t75jpsfwdy",
+  "upgrade": "pear://<YOUR_KEY_HERE>",
   "scripts": {
     "format": "prettier . --write",
     "test": "brittle-bare test/index.js",
