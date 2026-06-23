@@ -2,7 +2,7 @@
 
 > Pear Hello World for Standalone Bare Processes with `pear-runtime` worker
 
-End-to-end boilerplate for embedding [pear-runtime] into the worker of a [Bare] CLI with peer-to-peer OTA update support.
+End-to-end boilerplate for embedding [pear-runtime] into the [Bare] worker of a [Bare] CLI with peer-to-peer OTA update support.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime] module
