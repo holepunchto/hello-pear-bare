@@ -4,7 +4,7 @@ const pkg = require('./package.json')
 const os = require('bare-os')
 const { isWindows } = require('which-runtime')
 const path = require('bare-path')
-const startUpdater = require('./lib/updater.js')
+const Updates = require('./lib/updates.js')
 
 const appName = pkg.productName || pkg.name
 
@@ -29,7 +29,7 @@ function getRunningAppPath() {
   return os.execPath()
 }
 
-const endWorker = startUpdater({
+const updatesResource = new Updates({
   dir,
   app: getRunningAppPath(),
   updates,
@@ -38,11 +38,20 @@ const endWorker = startUpdater({
   name: isWindows ? appName + '.exe' : appName
 })
 
+updatesResource.on('storage', (storage) => console.log('Application storage:', storage))
+updatesResource.on('updating', () => console.log('[updater] getting new update'))
+updatesResource.on('updating-delta', (delta) => console.log('[updater]', delta))
+updatesResource.on('updated', () => console.log('[updater] update complete... applying'))
+updatesResource.on('update-applied', () =>
+  console.log('[updater] applied update, restart to run latest version')
+)
+updatesResource.on('error', (err) => console.error('[updater:error]', err))
+
 let tearingDown = false
 async function teardown(code = 0) {
   if (tearingDown) return
   tearingDown = true
-  await endWorker()
+  await updatesResource.close()
   global.Bare.exit(code)
 }
 
@@ -51,4 +60,10 @@ global.Bare.on('SIGINT', () => teardown(130))
 global.Bare.on('SIGQUIT', () => teardown(131))
 global.Bare.on('SIGTERM', () => teardown(143))
 
-console.log('CLI ready. Press Ctrl+C to stop.')
+updatesResource.ready().then(
+  () => console.log('CLI ready. Press Ctrl+C to stop.'),
+  (err) => {
+    console.error('[updater:error]', err)
+    teardown(1)
+  }
+)
