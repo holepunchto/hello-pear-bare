@@ -4,7 +4,7 @@ const pkg = require('./package.json')
 const os = require('bare-os')
 const { isWindows } = require('which-runtime')
 const path = require('bare-path')
-const Updates = require('./lib/updates.js')
+const App = require('./index.js')
 
 const appName = pkg.productName || pkg.name
 
@@ -17,52 +17,44 @@ const cmd = command(
 cmd.parse(global.Bare.argv.slice(2))
 
 const updates = cmd.flags.updates
-const isDev = path.basename(Bare.argv[0] || '').startsWith('bare')
+const isDev = path.basename(Bare.argv[0]) === 'bare'
 const storage = cmd.flags.storage || (isDev ? null : path.join(storageAPI.persistent(), appName))
 const dir = storage || path.join(os.tmpdir(), 'pear', appName)
 
 console.log(`${appName} v${pkg.version}`)
 console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
 
-function getRunningAppPath() {
-  if (isDev) return null
-  return os.execPath()
-}
-
-const updatesResource = new Updates({
+const app = new App({
   dir,
-  app: getRunningAppPath(),
+  app: isDev ? null : os.execPath(),
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
   name: isWindows ? appName + '.exe' : appName
 })
 
-updatesResource.on('updating', () => console.log('[updater] getting new update'))
-updatesResource.on('updating-delta', (delta) => console.log('[updater]', delta))
-updatesResource.on('updated', () => console.log('[updater] update complete... applying'))
-updatesResource.on('update-applied', () =>
+app.on('updating', () => console.log('[updater] getting new update'))
+app.on('updating-delta', (delta) => console.log('[updater]', delta))
+app.on('updated', () => console.log('[updater] update complete... applying'))
+app.on('update-applied', () =>
   console.log('[updater] applied update, restart to run latest version')
 )
-updatesResource.on('error', (err) => console.error('[updater:error]', err))
+app.on('error', (err) => console.error('[app:error]', err))
 
-let tearingDown = false
-async function teardown(code = 0) {
-  if (tearingDown) return
-  tearingDown = true
-  await updatesResource.close()
-  global.Bare.exit(code)
+async function exit(code = 0) {
+  Bare.exitCode = code
+  await app.close()
 }
 
-global.Bare.on('SIGHUP', () => teardown(129))
-global.Bare.on('SIGINT', () => teardown(130))
-global.Bare.on('SIGQUIT', () => teardown(131))
-global.Bare.on('SIGTERM', () => teardown(143))
+global.Bare.on('SIGHUP', () => exit(129))
+global.Bare.on('SIGINT', () => exit(130))
+global.Bare.on('SIGQUIT', () => exit(131))
+global.Bare.on('SIGTERM', () => exit(143))
 
-updatesResource.ready().then(
+app.ready().then(
   () => console.log('\nCLI ready. Press Ctrl+C to stop.\n'),
   (err) => {
-    console.error('[updater:error]', err)
+    console.error('[app:error]', err)
     teardown(1)
   }
 )

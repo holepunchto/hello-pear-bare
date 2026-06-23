@@ -2,7 +2,7 @@ const FramedStream = require('framed-stream')
 const PearRuntime = require('pear-runtime')
 const ReadyResource = require('ready-resource')
 
-module.exports = class Updates extends ReadyResource {
+module.exports = class App extends ReadyResource {
   constructor({ dir, app, updates, version, upgrade, name }) {
     super()
 
@@ -18,7 +18,7 @@ module.exports = class Updates extends ReadyResource {
   }
 
   _open() {
-    this.worker = PearRuntime.run(require.resolve('../workers/main.js'), [
+    this.worker = PearRuntime.run(require.resolve('./workers/main.js'), [
       this.dir,
       this.app || '',
       String(this.updates),
