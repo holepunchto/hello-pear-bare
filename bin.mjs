@@ -4,7 +4,7 @@ import os from 'bare-os'
 import { isWindows } from 'which-runtime'
 import path from 'bare-path'
 import pkg from './package.json'
-import App from './index.js'
+import App from './app.js'
 
 const appName = pkg.productName || pkg.name
 
