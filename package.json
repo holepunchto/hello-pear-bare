@@ -4,7 +4,7 @@
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
   "bin": "bin.mjs",
-  "upgrade": "pear://<YOUR_KEY_HERE>",
+  "upgrade": "pear://nyf7ptm7f6g79daxa195hsrto6hk6nnb8sg91y65tny1aa3ndsuy",
   "scripts": {
     "format": "prettier . --write",
     "test": "brittle-bare test/index.js",
@@ -19,6 +19,7 @@
     "make:win32-x64": "bare-build --name hello-pear-bare --standalone --host win32-x64 --out ./out/win32-x64 bin.mjs"
   },
   "dependencies": {
+    "bare-module": "^6.4.0",
     "bare-os": "^3.9.0",
     "bare-path": "^3.0.0",
     "bare-storage": "^1.1.0",
@@ -32,7 +33,8 @@
     "which-runtime": "^1.4.0"
   },
   "devDependencies": {
-    "bare-build": "^1.0.1",
+    "bare-build": "^1.0.2",
+    "bare-runtime": "1.29.4",
     "brittle": "^3.19.0",
     "lunte": "^1.2.0",
     "prettier": "^3.6.2",
