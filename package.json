@@ -19,7 +19,6 @@
     "make:win32-x64": "bare-build --name hello-pear-bare --standalone --host win32-x64 --out ./out/win32-x64 bin.mjs"
   },
   "dependencies": {
-    "bare-module": "^6.4.0",
     "bare-os": "^3.9.0",
     "bare-path": "^3.0.0",
     "bare-storage": "^1.1.0",
