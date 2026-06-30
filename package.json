@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "bare-build": "^1.0.1",
+    "bare-runtime": "^1.29.5",
     "brittle": "^3.19.0",
     "lunte": "^1.2.0",
     "prettier": "^3.6.2",
