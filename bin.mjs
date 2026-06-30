@@ -1,5 +1,6 @@
 import { command, flag } from 'paparam'
 import { persistent } from 'bare-storage'
+import process from 'bare-process'
 import os from 'bare-os'
 import { isWindows } from 'which-runtime'
 import path from 'bare-path'
@@ -41,10 +42,10 @@ app.on('update-applied', () =>
 )
 app.on('error', (err) => console.error('[app:error]', err))
 
-Bare.on('SIGHUP', () => app.exit(129))
-Bare.on('SIGINT', () => app.exit(130))
-Bare.on('SIGQUIT', () => app.exit(131))
-Bare.on('SIGTERM', () => app.exit(143))
+process.on('SIGHUP', () => app.exit(129))
+process.on('SIGINT', () => app.exit(130))
+process.on('SIGQUIT', () => app.exit(131))
+process.on('SIGTERM', () => app.exit(143))
 
 try {
   await app.ready()

@@ -21,6 +21,7 @@
   "dependencies": {
     "bare-os": "^3.9.0",
     "bare-path": "^3.0.0",
+    "bare-process": "^4.5.0",
     "bare-storage": "^1.1.0",
     "corestore": "^7.9.2",
     "hyperswarm": "^4.17.0",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "bare-build": "^1.0.1",
+    "bare-runtime": "^1.29.5",
     "brittle": "^3.19.0",
     "lunte": "^1.2.0",
     "prettier": "^3.6.2",
