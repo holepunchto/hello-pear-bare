@@ -13,12 +13,12 @@ module.exports = class App extends ReadyResource {
     this.upgrade = upgrade
     this.name = name
 
-    this.worker = null
+    this.IPC = null
     this.pipe = null
   }
 
   _open() {
-    this.worker = PearRuntime.run(require.resolve('./workers/main.js'), [
+    this.IPC = PearRuntime.run(require.resolve('./workers/main.js'), [
       this.dir,
       this.app || '',
       String(this.updates),
@@ -26,12 +26,12 @@ module.exports = class App extends ReadyResource {
       this.upgrade,
       this.name
     ])
-    this.pipe = new FramedStream(this.worker)
+    this.pipe = new FramedStream(this.IPC)
 
     this.pipe.on('data', (data) => this._onmessage(data))
     this.pipe.on('error', (err) => this.emit('error', err))
-    this.worker.on('error', (err) => this.emit('error', err))
-    this.worker.on('exit', (code) => {
+    this.IPC.on('error', (err) => this.emit('error', err))
+    this.IPC.on('exit', (code) => {
       if (code === 0 || this.closing !== null || this.closed) return
       this.emit('error', new Error(`Updates worker exited with code ${code}`))
     })
@@ -39,13 +39,13 @@ module.exports = class App extends ReadyResource {
 
   _close() {
     const pipe = this.pipe
-    const worker = this.worker
+    const IPC = this.IPC
 
     this.pipe = null
-    this.worker = null
+    this.IPC = null
 
     pipe?.destroy()
-    worker?.destroy()
+    IPC?.destroy()
   }
 
   _onmessage(data) {
