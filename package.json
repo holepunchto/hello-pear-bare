@@ -1,10 +1,10 @@
 {
   "name": "hello-pear-bare",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
   "bin": "bin.mjs",
-  "upgrade": "pear://7sm8ou49ub1py6qmjrw98qsukd3tgte69nbeg9mfo4isorjpcwto",
+  "upgrade": "pear://<YOUR_KEY_HERE>",
   "scripts": {
     "format": "prettier . --write",
     "test": "brittle-bare test/index.js",
