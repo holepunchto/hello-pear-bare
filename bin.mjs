@@ -34,6 +34,7 @@ const app = new App({
   name: isWindows ? appName + '.exe' : appName
 })
 
+app.on('message', (message) => console.log(message))
 app.on('updating', () => console.log('[updater] getting new update'))
 app.on('updating-delta', (delta) => console.log('[updater]', delta))
 app.on('updated', () => console.log('[updater] update complete... applying'))

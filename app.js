@@ -19,12 +19,12 @@ module.exports = class App extends ReadyResource {
 
   _open() {
     this.IPC = PearRuntime.run(require.resolve('./workers/main.js'), [
-      this.dir,
-      this.app || '',
       String(this.updates),
       this.version,
       this.upgrade,
-      this.name
+      this.name,
+      this.dir,
+      this.app || ''
     ])
     this.pipe = new FramedStream(this.IPC)
 
