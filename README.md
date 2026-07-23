@@ -1,8 +1,8 @@
 # hello-pear-bare
 
-> Pear Hello World for standalone Bare processes with `pear-runtime`
+> Pear Hello World for Standalone Bare Processes with `pear-runtime`
 
-End-to-end boilerplate for embedding [pear-runtime] in a standalone [Bare] CLI with peer-to-peer OTA update support.
+End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
 
 This variant starts a detached [`bare-daemon`][bare-daemon] updater, allowing short-lived CLI commands to exit while update checks continue in the background.
 
@@ -13,8 +13,8 @@ This variant starts a detached [`bare-daemon`][bare-daemon] updater, allowing sh
 
 ## Variants
 
-- [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` in a Bare worker and communicates over framed IPC.
-- [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): runs `pear-runtime` directly in the CLI process.
+- [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` inside a Bare worker thread.
+- [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): workerless with `pear-runtime` updates.
 - (current) [`daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon): runs `pear-runtime` in a detached updater daemon.
 
 ## Table of Contents
@@ -26,7 +26,6 @@ This variant starts a detached [`bare-daemon`][bare-daemon] updater, allowing sh
   - [Create an upgrade link](#create-an-upgrade-link)
   - [Start](#start)
 - [Architecture](#architecture)
-  - [Runtime Model](#runtime-model)
   - [Updates](#updates)
 - [Peer-to-Peer Deployments](#peer-to-peer-deployments)
 - [Installing Distributables](#installing-distributables)
@@ -55,7 +54,7 @@ npm install
 
 ### Create an upgrade link
 
-OTA updates require `package.json` to contain a valid `pear://` link in the `upgrade` field. Replace the `pear://<YOUR_KEY_HERE>` placeholder before enabling updates.
+This template expects `package.json` to contain a valid `pear://` link in the `upgrade` field. If it still contains the placeholder `pear://<YOUR_KEY_HERE>`, startup will fail with `INVALID_URL`.
 
 Create a link with [`pear touch`](https://docs.pears.com/reference/cli.html#pear-touch-flags-channel):
 
@@ -91,13 +90,11 @@ Development runs are unbundled, so they exercise the daemon lifecycle without re
 
 ## Architecture
 
-### Runtime Model
-
-The foreground CLI uses `bare-daemon` to start itself in hidden updater mode. The updater process owns `Corestore`, `Hyperswarm` and `PearRuntime`; an `updater.lock` file ensures only one updater runs per storage directory.
-
 ### Updates
 
-The updater consumes the `upgrade` link from `package.json`, joins the updater drive and applies downloaded updates in the background. It waits 30 seconds by default, remains alive when a download starts and exits after an update is applied or an error occurs. Output is written to `<storage>/updates.log`.
+Updates are managed by the `App` class in `app.js`. The foreground CLI starts itself in a detached updater mode with `bare-daemon`. The updater owns `Corestore`, `Hyperswarm` and `PearRuntime`, while `updater.lock` ensures only one updater runs per storage directory.
+
+It uses the configured `upgrade` link in `package.json`, waits 30 seconds by default and writes output to `<storage>/updates.log`. Once a download starts, the daemon remains alive until the update is applied or an error occurs.
 
 Per-run disable updates:
 
@@ -123,7 +120,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
-- `npm start` - run the Bare CLI in dev mode (`bare bin.mjs --no-updates`)
+- `npm start` - run the Bare Process in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
@@ -137,14 +134,14 @@ npx pear-install pear://<key>
 
 ## Project Structure
 
-- `bin.mjs` - CLI entrypoint and runtime wiring
+- `bin.mjs` - entrypoint and runtime wiring
 - `app.js` - daemon launcher and updater resource
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
 
 ## Troubleshooting
 
-- `INVALID_URL: Invalid URL 'pear://<YOUR_KEY_HERE>'` means updates were enabled before the placeholder `upgrade` link in `package.json` was replaced. Run `pear touch`, then put the generated `pear://...` link in `package.json`.
+- `INVALID_URL: Invalid URL 'pear://<YOUR_KEY_HERE>'` means the placeholder `upgrade` link in `package.json` has not been replaced. Run `pear touch`, then put the generated `pear://...` link in `package.json`.
 - If updates do not trigger, verify `package.json` contains a valid `upgrade` Pear link and that peers are seeding the target drive.
 - Check `<storage>/updates.log` for daemon startup and updater errors.
 - If `npm run make` fails on unsupported hosts, run a specific `make:<platform>-<arch>` script or build on a supported host.
