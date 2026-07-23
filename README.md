@@ -1,10 +1,8 @@
 # hello-pear-bare
 
-> Pear Hello World for standalone Bare processes with `pear-runtime`
+> Pear Hello World for Standalone Bare Processes with `pear-runtime`
 
-End-to-end boilerplate for embedding [pear-runtime] in a standalone [Bare] CLI with peer-to-peer OTA update support.
-
-This variant runs networking, storage and updates in the CLI process without a worker or daemon.
+End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime] module
@@ -12,8 +10,8 @@ This variant runs networking, storage and updates in the CLI process without a w
 
 ## Variants
 
-- [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` in a Bare worker and communicates over framed IPC.
-- (current) [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): runs `pear-runtime` directly in the CLI process.
+- [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` inside a Bare worker thread.
+- (current) [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): workerless with `pear-runtime` updates.
 - [`daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon): runs `pear-runtime` in a detached updater daemon.
 
 ## Table of Contents
@@ -25,7 +23,6 @@ This variant runs networking, storage and updates in the CLI process without a w
   - [Create an upgrade link](#create-an-upgrade-link)
   - [Start](#start)
 - [Architecture](#architecture)
-  - [Runtime Model](#runtime-model)
   - [Updates](#updates)
 - [Peer-to-Peer Deployments](#peer-to-peer-deployments)
 - [Installing Distributables](#installing-distributables)
@@ -54,7 +51,7 @@ npm install
 
 ### Create an upgrade link
 
-OTA updates require `package.json` to contain a valid `pear://` link in the `upgrade` field. Replace the `pear://<YOUR_KEY_HERE>` placeholder before enabling updates.
+This template expects `package.json` to contain a valid `pear://` link in the `upgrade` field. If it still contains the placeholder `pear://<YOUR_KEY_HERE>`, startup will fail with `INVALID_URL`.
 
 Create a link with [`pear touch`](https://docs.pears.com/reference/cli.html#pear-touch-flags-channel):
 
@@ -82,13 +79,11 @@ npm start -- --updates
 
 ## Architecture
 
-### Runtime Model
-
-The `App` resource creates `Corestore`, `Hyperswarm` and `PearRuntime` directly in the CLI process. Their lifecycle is tied to the foreground command.
-
 ### Updates
 
-The `App` resource consumes the `upgrade` link from `package.json`, joins the updater drive and applies downloaded updates in the foreground process.
+Updates are managed by the `App` class in `app.js`, which wraps the updater lifecycle as a ready resource and emits update events for `bin.mjs` to log.
+
+It uses the configured `upgrade` link in `package.json`.
 
 Per-run disable updates:
 
@@ -114,7 +109,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
-- `npm start` - run the Bare CLI in dev mode (`bare bin.mjs --no-updates`)
+- `npm start` - run the Bare Process in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
@@ -128,14 +123,14 @@ npx pear-install pear://<key>
 
 ## Project Structure
 
-- `bin.mjs` - CLI entrypoint and runtime wiring
-- `app.js` - in-process updater resource
+- `bin.mjs` - entrypoint and runtime wiring
+- `app.js` - update resource used by the entrypoint
 - `scripts/make.js` - platform/arch build target selector
 - `test/index.js` - brittle-bare tests
 
 ## Troubleshooting
 
-- `INVALID_URL: Invalid URL 'pear://<YOUR_KEY_HERE>'` means updates were enabled before the placeholder `upgrade` link in `package.json` was replaced. Run `pear touch`, then put the generated `pear://...` link in `package.json`.
+- `INVALID_URL: Invalid URL 'pear://<YOUR_KEY_HERE>'` means the placeholder `upgrade` link in `package.json` has not been replaced. Run `pear touch`, then put the generated `pear://...` link in `package.json`.
 - If updates do not trigger, verify `package.json` contains a valid `upgrade` Pear link and that peers are seeding the target drive.
 - If `npm run make` fails on unsupported hosts, run a specific `make:<platform>-<arch>` script or build on a supported host.
 - This template does not implement app-level data persistence; it is a minimal CLI + updater example.
