@@ -4,7 +4,7 @@
 
 End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Process with peer-to-peer OTA update support.
 
-This variant is for fast, one-shot local programs that use peer-to-peer networking only for OTA updates. It starts a detached [`bare-daemon`][bare-daemon] updater, allowing the foreground command to exit while the update check continues in the background. Applications with their own peer-to-peer workload are long-lived and better suited to the `main` or `single-thread` variant.
+This variant is mainly for one-shot local programs that use peer-to-peer networking only for OTA updates. It starts a detached [`bare-daemon`][bare-daemon] updater, allowing the foreground command to exit while the update check continues in the background. Applications with their own peer-to-peer workload are long-lived and are in most cases better suited to the `main` or `single-thread` variant.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime] module
