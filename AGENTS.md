@@ -1,22 +1,22 @@
 # AGENTS.md
 
-Holepunch's boilerplate for a **standalone Bare CLI with peer-to-peer OTA updates**
-(no update server). This branch (`variant/daemon`) is for **short-lived CLI
-programs**: the foreground command never runs the updater — on each updates-enabled
-launch it detach-spawns a copy of itself (`bare-daemon`) with a hidden `--updater`
+Holepunch's boilerplate for a **standalone Bare program with peer-to-peer OTA updates**
+(no update server). This branch (`variant/daemon`) is for **short-lived programs**: the foreground command never runs the updater —
+launching the program detach-spawns a copy of itself (`bare-daemon`) with a hidden `--updater`
 flag, then exits; the daemon checks for an update within a window, auto-applies,
-logs to `<storage>/updates.log`, and exits. Long-lived programs fit `main` (Bare
-worker) or `variant/single-thread` (in-process) better — each branch carries its
-own AGENTS.md. App logic belongs in the `bin.mjs` foreground path (the foreground
-never constructs `App`). Stack: **Bare runtime, not Node** (`bare-*` builtins),
-paparam, `pear-runtime`, `bare-daemon`, prettier + lunte, brittle-bare (one
-placeholder test). CI lints/builds/tests on all six hosts; a dispatchable build
+logs to `<storage>/updates.log`, and exits. Long-lived programs fit [main](https://github.com/holepunchto/hello-pear-bare/tree/main) (Bare
+worker) or [variant/single-thread](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread) (in-process) better — each branch carries its
+own AGENTS.md. `bin.mjs` owns terminal/CLI concerns (flags, output, and signals);
+`app.js` exports `App`, where program logic belongs, and also owns the detached
+updater lifecycle. Stack: **Bare runtime, not Node** (`bare-*` builtins), paparam,
+`pear-runtime`, `bare-daemon`, prettier + lunte, brittle-bare (one placeholder
+test). CI lints once and builds/tests on all six hosts; a dispatchable build
 workflow assembles the by-arch deployment tarball. [README](README.md) = human
 manual; staging onward delegates to hello-pear-electron's README.
 
 Key facts: only one updater runs per storage dir (`updater.lock` file lock; a
 second daemon exits silently). Updater progress and errors go **only** to
-`<storage>/updates.log` — the foreground prints just whether updates are enabled.
+`<storage>/updates.log` — the foreground prints update status and readiness only.
 Dev runs are never "bundled" (`app` is `null`), so the daemon cannot download or
 apply in dev — it joins the swarm, replicates drive metadata, waits out its window
 and exits; the real update flow needs a standalone build.
@@ -47,15 +47,18 @@ the drive the updater follows), so committing a real dev key is safe.
 - `App.spawnUpdater()` builds the daemon argv (`--updater`, `--storage`,
   `--update-window`) ↔ the paparam flag declarations in `bin.mjs` — adding or
   renaming daemon flags must change both sides
-- `App` constructor opts pass straight into `PearRuntime`; `store` and `swarm`
-  must be passed together (pear-runtime throws on one without the other)
-- The app-name chain: `pkg.name` ↔ `--name hello-pear-bare` hardcoded in all six
-  `make:*` scripts ↔ hardcoded paths in `.github/workflows/build.yaml` ↔ the
-  `by-arch/<host>/app/<name>` filename the updater looks up (`<name>.exe` on
-  Windows → the copy+rename update path). A partial rename ships binaries the
-  updater can't find
-- Node builtins anywhere in this code ↔ `package.json#imports`: Bare has no
-  `events` etc. — use `bare-*` modules or ship an imports map entry like
+- The `App` constructor destructures a fixed option set and passes it to
+  `PearRuntime`; adding runtime/updater options requires changing both sides.
+  `store` and `swarm` must be passed together (pear-runtime throws on one without
+  the other)
+- The app-name chain: `appName` (`pkg.productName || pkg.name`) ↔ the
+  `hello-pear-bare` value passed to `--name` in all six `make:*` scripts ↔
+  hardcoded paths in
+  `.github/workflows/build.yaml` ↔ the `by-arch/<host>/app/<name>` filename the
+  updater looks up (`<name>.exe` on Windows → the copy+rename update path). A
+  partial rename ships binaries the updater can't find
+- Node builtins in Bare-bundled runtime code ↔ `package.json#imports`: Bare has
+  no `events` etc. — use `bare-*` modules or ship an imports map entry like
   `"events": {"bare": "bare-events", "default": "events"}` (hypercore and
   hyperswarm ship the same map)
 - `package.json#upgrade` ↔ the release line every shipped binary follows
@@ -82,13 +85,13 @@ rare.
   asked for exactly that in this session
 - 🚫 **Never:** add flags/argv surfaces without declaring them to paparam in
   `bin.mjs` (unknown argv crashes the CLI at startup — and the daemon reuses the
-  same parser); use Node builtins without an `imports` entry (see
-  contracts)
+  same parser); use Node builtins in Bare-bundled runtime code without an
+  `imports` entry (see contracts)
 
 ## Topic docs — match your task, read the doc BEFORE editing that area
 
-Each `agent_docs/` file holds only code-verified facts you cannot deduce from this
-repo's sources; each opens with its own scope statement. Routing:
+Each `agent_docs/` file collects non-obvious, verified facts and opens with its own
+scope statement. Routing:
 
 - Editing `bin.mjs` or `app.js`, or debugging the foreground/daemon lifecycle
   → [`agent_docs/architecture.md`](agent_docs/architecture.md)
