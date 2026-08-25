@@ -10,7 +10,11 @@ jobs:
   build:
     name: ${{ matrix.host }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+    environment: release
     strategy:
       fail-fast: false
       matrix:
@@ -28,22 +32,28 @@ jobs:
           - os: windows-11-arm
             host: win32-arm64
     steps:
-      - name: Setup repo
-        uses: holepunchto/actions/.github/steps/setup-repo@v1
+      - uses: actions/checkout@v4
 
-      - name: Install w/ dev deps
-        run: npm ci
-
-      - name: Build
-        run: npm run make:${{ matrix.host }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: holepunchto/actions/node-base-extended@v1
         with:
-          name: ${{ matrix.host }}
-          path: out/${{ matrix.host }}/hello-pear-bare*
-          if-no-files-found: error
-          retention-days: 1
+          clean-install: true
+
+      - uses: holepunchto/actions/make-pear-app@v1
+        with:
+          channel: production
+          host: ${{ matrix.host }}
+          standalone: ${{ startsWith(matrix.host, 'win32-') && 'hello-pear-bare.exe' || 'hello-pear-bare' }}
+          standalone_artifact_name: ${{ matrix.host }}
+          macos_certificate_base64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          macos_p12_password: ${{ secrets.MACOS_P12_PASSWORD }}
+          macos_codesign_identity: ${{ secrets.MACOS_CODESIGN_IDENTITY }}
+          macos_notarization_method: apple_id_password
+          macos_apple_id: ${{ secrets.MACOS_APPLE_ID }}
+          macos_apple_password: ${{ secrets.MACOS_APPLE_PASSWORD }}
+          macos_apple_team_id: ${{ secrets.MACOS_APPLE_TEAM_ID }}
+          windows_signing_method: cert_pfx
+          windows_cert_pfx_base64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          windows_cert_password: ${{ secrets.WINDOWS_CERT_PASSWORD }}
 
   package:
     name: Package by-arch

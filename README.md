@@ -121,7 +121,7 @@ npx pear-install pear://<key>
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
 - `npm run format` - format repository with prettier
-- `npm run make` - auto-detect host OS/arch and run matching build target
+- `npm run make` - build a standalone for the current host to `out/make`
 - `npm run make:darwin-arm64` - build standalone to `out/darwin-arm64`
 - `npm run make:darwin-x64` - build standalone to `out/darwin-x64`
 - `npm run make:linux-arm64` - build standalone to `out/linux-arm64`
@@ -129,12 +129,27 @@ npx pear-install pear://<key>
 - `npm run make:win32-arm64` - build standalone to `out/win32-arm64`
 - `npm run make:win32-x64` - build standalone to `out/win32-x64`
 
+Set `HOST` to override the target used by `npm run make`, for example:
+
+```sh
+HOST=linux-arm64 npm run make
+```
+
+### Signing Standalones
+
+`npm run make` supports the signing credentials provided by the [`make-pear-app` GitHub Action][make-pear-app]:
+
+- On macOS, set `MAC_CODESIGN_IDENTITY` to sign with the hardened runtime. Set `KEYCHAIN_PROFILE` as well to submit the signed executable to Apple's notary service.
+- On Windows, set `WINDOWS_CERT_SHA1` to sign with the matching certificate from the current user's certificate store.
+
+The platform-specific `make:<platform>-<arch>` scripts build unsigned standalones.
+
 ## Project Structure
 
 - `bin.mjs` - CLI entrypoint and runtime wiring
 - `app.js` - update resource used by the entrypoint
 - `workers/main.js` - Bare worker example
-- `scripts/make.js` - platform/arch build target selector
+- `scripts/make.js` - standalone builder with host selection, signing, and notarization support
 - `test/index.js` - brittle-bare tests
 
 ## Troubleshooting
@@ -152,3 +167,4 @@ npx pear-install pear://<key>
 [Bare]: https://github.com/holepunchto/bare
 [nodejs]: https://nodejs.org
 [bare-build]: https://github.com/holepunchto/bare-build
+[make-pear-app]: https://github.com/holepunchto/actions/tree/main/make-pear-app
