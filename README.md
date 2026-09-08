@@ -10,12 +10,31 @@ End-to-end boilerplate for embedding [pear-runtime] into a Standalone [Bare] Pro
 
 ## Variants
 
-- [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` inside a Bare worker thread.
-- (current) [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): workerless with `pear-runtime` updates.
-- [`daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon): runs `pear-runtime` in a detached updater daemon.
+All three branches are standalone Bare CLI boilerplates with the same peer-to-peer deployment and automatic OTA update model. They differ in where the update engine runs, how isolated it is from the application and whether it can outlive the foreground command.
+
+| Branch                                                                                               | Boilerplate type | Runtime topology                                                           | Best suited for                                                             |
+| ---------------------------------------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main)                         | Worker-thread    | The CLI and a dedicated Bare worker run as separate threads in one process | Long-running applications that benefit from isolation or a reusable backend |
+| [`variant/single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread) | In-process       | The application and update engine share one Bare thread                    | Small applications that favor direct control and the fewest moving parts    |
+| [`variant/daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon)               | Detached updater | The foreground command starts a temporary background updater process       | Short-lived commands that may exit before an update check can complete      |
+
+### `main`: worker-thread boilerplate
+
+The CLI starts [`hello-pear-worker`][hello-pear-worker] in a dedicated Bare worker thread and communicates with it over framed IPC. Networking, storage and updates stay off the application thread, while the worker lifecycle remains tied to the foreground process. This is the general-purpose variant and the best starting point when the backend may also be shared with desktop or mobile frontends.
+
+### `variant/single-thread`: in-process boilerplate
+
+The application constructs `PearRuntime`, `Corestore` and `Hyperswarm` directly in its foreground thread. There is no worker, daemon or IPC protocol, which makes this the smallest and easiest variant to customize. Update work shares the application's lifecycle and failure boundary, so the process must remain alive long enough to receive an update.
+
+### `variant/daemon`: detached-updater boilerplate
+
+The foreground command starts a detached copy of itself in updater mode and can exit immediately. The daemon waits for an update during a bounded window; once a download starts, it remains alive until the update is applied or fails. Progress is recorded in `updates.log`. This is intended for one-shot or short-lived commands; the updated binary runs on a later invocation.
+
+All variants apply updates automatically and run the updated binary on the next launch. Development runs are unbundled, so `--updates` exercises replication but cannot replace the local executable; end-to-end updates require a standalone build.
 
 ## Table of Contents
 
+- [Variants](#variants)
 - [OS Support](#os-support)
 - [Requirements](#requirements)
 - [Development](#development)
