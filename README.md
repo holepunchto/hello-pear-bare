@@ -103,9 +103,39 @@ The main CLI starts `workers/main.js` as a Bare sidecar and communicates with it
 
 Use the [`pear`][pear-docs] CLI to deploy applications.
 
-Set the `upgrade` field in `package.json` to your distribution drive link, then follow the default flow from section 4 onward:
+The full release flow — stage, provision, and multisig — plus the Foundational Steps, release lines, and per-OS build/signing details now live in the Pear docs:
 
-[hello-pear-electron: 4. Build Deployment Directory and onward](https://github.com/holepunchto/hello-pear-electron#4-build-deployment-directory-)
+- [Deploy your application](https://docs.pears.com/how-to/operate-an-app/manual-deployment/deployment) — the eight Foundational Steps, command by command
+- [Release pipeline](https://docs.pears.com/explanation/deployment-releasing-apps-p2p) — why stage, provision, and multisig exist and how they chain together
+- [Build desktop distributables](https://docs.pears.com/how-to/operate-an-app/build-and-package/build-desktop-distributables) — macOS, Windows, and Linux signing and notarization
+
+The Foundational Steps bootstrap the deployment and then feed into the repeating release cycle:
+
+```mermaid
+graph TD
+    subgraph Link Setup
+        T(0. Touch & Seed) --> U(1. Set upgrade link)
+    end
+
+    U -.-> V
+
+    V(2. Version) --> Make(3. Make Distributables)
+    Make --> Build(4. Build Deployment Directory)
+    Build --> Stage(5. Stage)
+    Stage -->|iterate| V
+    Stage -->|stable| Prov(6. Provision)
+    Prov -->|assessed| Req(7d. Prepare Request)
+    Req --> Sign(7e. Sign)
+    Sign --> Verify(7f. Verify)
+    Verify --> Commit(7g. Commit)
+    Commit --> Live[Production Live]
+    Live -->|next release| V
+
+    K(7a. Create Signing Keys) --> C(7b. Create Multisig Config)
+    Prov -->|setup| C
+    C --> L(7c. Set upgrade to Multisig Link)
+    L --> Req
+```
 
 ## Installing Distributables
 
