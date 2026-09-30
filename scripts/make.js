@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict'
-
+const { productName, name } = require('../package.json')
 const fs = require('fs/promises')
 const os = require('os')
 const path = require('path')
@@ -27,7 +27,8 @@ if (!supported.has(host)) {
 
 const isWindows = os.platform() === 'win32'
 const out = path.join('.', 'out', 'make')
-const bin = isWindows ? 'hello-pear-bare.exe' : 'hello-pear-bare'
+const appName = productName || name
+const bin = isWindows ? appName + '.exe' : appName
 const cleanup = []
 
 function waitForExit(child) {
