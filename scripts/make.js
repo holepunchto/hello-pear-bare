@@ -81,17 +81,7 @@ async function make() {
 
   const build = spawn(
     'bare-build',
-    [
-      '--name',
-      appName,
-      '--standalone',
-      ...signFlags,
-      '--host',
-      host,
-      '--out',
-      out,
-      'bin.mjs'
-    ],
+    ['--name', appName, '--standalone', ...signFlags, '--host', host, '--out', out, 'bin.mjs'],
     {
       cwd: root,
       stdio: 'inherit',
