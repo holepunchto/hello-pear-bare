@@ -83,7 +83,7 @@ async function make() {
     'bare-build',
     [
       '--name',
-      'hello-pear-bare',
+      appName,
       '--standalone',
       ...signFlags,
       '--host',
