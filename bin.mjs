@@ -5,10 +5,11 @@ import os from 'bare-os'
 import { isWindows } from 'which-runtime'
 import path from 'bare-path'
 import pkg from './package.json'
+import names from './lib/app-name.js'
 import App from './app.js'
 
-const appName = pkg.productName || pkg.name
-const isDev = path.basename(Bare.argv[0]) === 'bare'
+const { appName, binName } = names
+const isDev = path.basename(Bare.argv[0]) === (isWindows ? 'bare.exe' : 'bare')
 
 const cmd = command(
   appName,
@@ -37,7 +38,7 @@ const app = new App({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: isWindows ? appName + '.exe' : appName
+  name: isWindows ? binName + '.exe' : binName
 })
 
 app.on('updating', () => console.log('[updater] getting new update'))
