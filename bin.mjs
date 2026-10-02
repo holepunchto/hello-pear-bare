@@ -7,15 +7,15 @@ import path from 'bare-path'
 import FileLog from 'bare-file-logger'
 import Console from 'bare-console'
 import pkg from './package.json'
+import names from './lib/app-name.js'
 import App from './app.js'
 
-const appName = pkg.productName || pkg.name
+const { appName, binName } = names
 const isDev = path.basename(Bare.argv[0], path.extname(Bare.argv[0])) === 'bare'
 
 const cmd = command(
   appName,
   summary(pkg.description),
-  flag('--version|-v', 'Print the current version'),
   flag('--storage <dir>', 'custom storage directory'),
   flag('--no-updates', 'disable OTA updates for this run'),
   flag('--update-window <ms>', 'updater wait in milliseconds'),
@@ -24,10 +24,6 @@ const cmd = command(
 
 cmd.parse(Bare.argv.slice(isDev ? 2 : 1))
 if (cmd.flags.help) Bare.exit()
-if (cmd.flags.version) {
-  console.log(`${appName} v${pkg.version}`)
-  Bare.exit()
-}
 
 const updates = cmd.flags.updates
 const storage = cmd.flags.storage || (isDev ? null : path.join(persistent(), appName))
@@ -45,6 +41,7 @@ if (cmd.flags.updater) {
   Bare.exit()
 }
 
+console.log(`${appName} v${pkg.version}`)
 console.log(`Updates: ${updates === false ? 'disabled' : 'enabled'}`)
 
 if (updates !== false) {
@@ -65,7 +62,7 @@ async function runUpdater(dir, wait) {
     updates: true,
     version: pkg.version,
     upgrade: pkg.upgrade,
-    name: isWindows ? appName + '.exe' : appName
+    name: isWindows ? binName + '.exe' : binName
   })
   const output = new FileLog(path.join(dir, 'updates.log'), { maxSize: 1024 * 1024 })
   const log = new Console(output)
