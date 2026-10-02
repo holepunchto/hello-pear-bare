@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.host }}
-          path: out/${{ matrix.host }}/hello-pear-bare*
+          path: out/${{ matrix.host }}/*
           if-no-files-found: error
           retention-days: 1
 
@@ -63,14 +63,14 @@ jobs:
 
       - name: Build by-arch
         run: |
-          chmod +x apps/darwin-*/hello-pear-bare apps/linux-*/hello-pear-bare
+          chmod +x apps/darwin-*/* apps/linux-*/*
           npx --yes pear-build@1.1.1 \
-            --darwin-arm64-app apps/darwin-arm64/hello-pear-bare \
-            --darwin-x64-app apps/darwin-x64/hello-pear-bare \
-            --linux-arm64-app apps/linux-arm64/hello-pear-bare \
-            --linux-x64-app apps/linux-x64/hello-pear-bare \
-            --win32-x64-app apps/win32-x64/hello-pear-bare.exe \
-            --win32-arm64-app apps/win32-arm64/hello-pear-bare.exe \
+            --darwin-arm64-app apps/darwin-arm64/* \
+            --darwin-x64-app apps/darwin-x64/* \
+            --linux-arm64-app apps/linux-arm64/* \
+            --linux-x64-app apps/linux-x64/* \
+            --win32-x64-app apps/win32-x64/* \
+            --win32-arm64-app apps/win32-arm64/* \
             --target deployment \
             --package package.json
           tar -C deployment -czf by-arch.tar.gz .
