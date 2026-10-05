@@ -5,11 +5,10 @@ import os from 'bare-os'
 import { isWindows } from 'which-runtime'
 import path from 'bare-path'
 import pkg from './package.json'
-import names from './lib/app-name.js'
 import App from './app.js'
 
-const { appName, binName } = names
-const isDev = path.basename(Bare.argv[0]) === (isWindows ? 'bare.exe' : 'bare')
+const appName = pkg.productName || pkg.name
+const isDev = path.basename(Bare.argv[0]) === 'bare'
 
 const cmd = command(
   appName,
@@ -34,7 +33,7 @@ const app = new App({
   updates,
   version: pkg.version,
   upgrade: pkg.upgrade,
-  name: isWindows ? binName + '.exe' : binName
+  name: isWindows ? appName + '.exe' : appName
 })
 
 app.on('message', (message) => console.log(message))
