@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict'
-const { productName, name } = require('../package.json')
+const pkg = require('../package.json')
 const fs = require('fs/promises')
 const os = require('os')
 const path = require('path')
@@ -27,8 +27,8 @@ if (!supported.has(host)) {
 
 const isWindows = os.platform() === 'win32'
 const out = path.join('.', 'out', 'make')
-const appName = productName || name
-const bin = isWindows ? appName + '.exe' : appName
+const appName = pkg.productName || pkg.name
+const bin = host.startsWith('win32-') ? appName + '.exe' : appName
 const cleanup = []
 
 function waitForExit(child) {
@@ -81,7 +81,7 @@ async function make() {
 
   const build = spawn(
     'bare-build',
-    ['--name', appName, '--standalone', ...signFlags, '--host', host, '--out', out, 'bin.mjs'],
+    ['--standalone', ...signFlags, '--host', host, '--out', out, 'bin.mjs'],
     {
       cwd: root,
       stdio: 'inherit',
@@ -94,9 +94,9 @@ async function make() {
   if (buildExitCode !== 0) throw new Error(`bare-build failed with exit code ${buildExitCode}`)
 
   if (process.env.KEYCHAIN_PROFILE) {
-    const temp = await fs.mkdtemp(path.join(os.tmpdir(), 'hello-pear-bare-notarize-'))
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), `${appName}-notarize-`))
     cleanup.push(temp)
-    const zip = path.join(temp, 'hello-pear-bare.zip')
+    const zip = path.join(temp, `${appName}.zip`)
 
     const compress = spawn('ditto', ['-c', '-k', '--sequesterRsrc', path.join(out, bin), zip], {
       cwd: root,
