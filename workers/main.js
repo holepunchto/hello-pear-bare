@@ -1,4 +1,4 @@
-// AUTO-GENERATED: REMOVE THIS COMMENT BEFORE EDITING
+// https://github.com/holepunchto/hello-pear-worker v1.2.0
 
 const PearRuntime = require('pear-runtime') // pear-runtime on desktop; pear-mobile on mobile
 const Hyperswarm = require('hyperswarm')
