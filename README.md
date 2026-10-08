@@ -4,18 +4,12 @@
 
 End-to-end boilerplate for embedding [pear-runtime] into the [Bare] worker of a [Bare] CLI with peer-to-peer OTA update support.
 
-This boilerplate uses the companion [`hello-pear-worker`][hello-pear-worker] as a reusable cross-platform local backend. Keeping networking, storage and updates in a separate worker lets mobile apps, desktop UIs and standalone Bare applications share the same backend implementation while each parent owns its platform-specific interface.
+This boilerplate includes the worker source from [`hello-pear-worker`][hello-pear-worker] as a reusable cross-platform local backend. Keeping networking, storage and updates in a separate worker lets mobile apps, desktop UIs and standalone Bare applications share the same backend implementation while each parent owns its platform-specific interface.
 
 - Peer-to-Peer deployment with [pear][pear-docs] CLI
 - Peer-to-Peer Over-the-Air updates with [`pear-runtime`][pear-runtime] module
 - Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
-
-## Variants
-
-- (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` inside a Bare worker thread.
-- [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): workerless with `pear-runtime` updates.
-- [`daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon): runs `pear-runtime` in a detached updater daemon.
 
 ## Table of Contents
 
@@ -52,6 +46,8 @@ This boilerplate uses the companion [`hello-pear-worker`][hello-pear-worker] as 
 ```sh
 npm install
 ```
+
+The worker is committed in `workers/main.js`; users do not need to run a setup command or enable install scripts.
 
 ### Create an upgrade link
 
@@ -98,6 +94,14 @@ npm start -- --no-updates
 ### Workers
 
 The main CLI starts `workers/main.js` as a Bare sidecar and communicates with it over framed IPC.
+
+Maintainers use `hello-pear-worker` as a development dependency. After updating it, inline the worker and save its runtime dependencies in this app:
+
+```sh
+npm run inline-worker
+```
+
+Commit `workers/main.js`, `package.json`, and `package-lock.json` together. The worker's first comment records its source URL and version. Remove that comment before editing the worker to prevent later updates from replacing your changes.
 
 ## Peer-to-Peer Deployments
 
@@ -147,6 +151,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
+- `npm run inline-worker` - update the committed worker and its runtime dependencies (maintainers)
 - `npm start` - run the Bare CLI in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
@@ -178,7 +183,7 @@ The platform-specific `make:<platform>-<arch>` scripts build unsigned standalone
 
 - `bin.mjs` - CLI entrypoint and runtime wiring
 - `app.js` - update resource used by the entrypoint
-- `workers/main.js` - Bare worker example
+- `workers/main.js` - committed Bare worker source from `hello-pear-worker`
 - `scripts/make.js` - standalone builder with host selection, signing, and notarization support
 - `test/index.js` - brittle-bare tests
 
