@@ -11,14 +11,14 @@ This boilerplate uses the companion [`hello-pear-worker`][hello-pear-worker] as 
 - Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
 
-## Variants
+## Related Repositories
 
-- (current) [`main`](https://github.com/holepunchto/hello-pear-bare/tree/main): runs `pear-runtime` inside a Bare worker thread.
-- [`single-thread`](https://github.com/holepunchto/hello-pear-bare/tree/variant/single-thread): workerless with `pear-runtime` updates.
-- [`daemon`](https://github.com/holepunchto/hello-pear-bare/tree/variant/daemon): runs `pear-runtime` in a detached updater daemon.
+- [`hello-pear-bare`][hello-pear-bare] (this repository): runs `pear-runtime` in a dedicated Bare worker for long-running applications and reusable backends.
+- [`hello-pear-daemon`][hello-pear-daemon]: runs `pear-runtime` in a detached updater for short-lived CLI commands, allowing updates to continue after the foreground command exits.
 
 ## Table of Contents
 
+- [Related Repositories](#related-repositories)
 - [OS Support](#os-support)
 - [Requirements](#requirements)
 - [Development](#development)
@@ -99,6 +99,14 @@ npm start -- --no-updates
 
 The main CLI starts `workers/main.js` as a Bare sidecar and communicates with it over framed IPC.
 
+Maintainers use `hello-pear-worker` and [`inline-worker`](https://github.com/holepunchto/inline-worker) as development dependencies. After updating the worker package, inline it and save its runtime dependencies in this app:
+
+```sh
+npm run inline-worker
+```
+
+Commit `workers/main.js`, `package.json`, and `package-lock.json` together. Users receive the committed worker and do not need to run this command. Remove the worker's source URL and version comment before editing it to preserve your changes on later updates.
+
 ## Peer-to-Peer Deployments
 
 Use the [`pear`][pear-docs] CLI to deploy applications.
@@ -147,6 +155,7 @@ npx pear-install pear://<key>
 
 ## Scripts
 
+- `npm run inline-worker` - update the committed worker and its runtime dependencies (maintainers)
 - `npm start` - run the Bare CLI in dev mode (`bare bin.mjs --no-updates`)
 - `npm test` - run `brittle-bare` tests
 - `npm run lint` - run prettier check and lunte
@@ -192,6 +201,8 @@ The platform-specific `make:<platform>-<arch>` scripts build unsigned standalone
 <!-- Reference Links -->
 
 [pear-docs]: https://docs.pears.com
+[hello-pear-bare]: https://github.com/holepunchto/hello-pear-bare
+[hello-pear-daemon]: https://github.com/holepunchto/hello-pear-daemon
 [hello-pear-worker]: https://github.com/holepunchto/hello-pear-worker
 [pear-runtime]: https://github.com/holepunchto/pear-runtime
 [Bare]: https://github.com/holepunchto/bare
