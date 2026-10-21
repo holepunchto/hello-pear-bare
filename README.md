@@ -11,11 +11,6 @@ This boilerplate uses the companion [`hello-pear-worker`][hello-pear-worker] as 
 - Bare worker process via `PearRuntime.run(...)`
 - Cross-platform standalone distributables via [`bare-build`][bare-build]
 
-## Related Repositories
-
-- [`hello-pear-bare`][hello-pear-bare] (this repository): runs `pear-runtime` in a dedicated Bare worker for long-running applications and reusable backends.
-- [`hello-pear-daemon`][hello-pear-daemon]: runs `pear-runtime` in a detached updater for short-lived CLI commands, allowing updates to continue after the foreground command exits.
-
 ## Table of Contents
 
 - [Related Repositories](#related-repositories)
@@ -31,8 +26,13 @@ This boilerplate uses the companion [`hello-pear-worker`][hello-pear-worker] as 
 - [Peer-to-Peer Deployments](#peer-to-peer-deployments)
 - [Installing Distributables](#installing-distributables)
 - [Scripts](#scripts)
+  - [Signing Standalones](#signing-standalones)
 - [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
+
+## Related Repositories
+
+Pear has official templates for desktop, terminal, short-lived CLI, and mobile apps. See [Start from a template][from-a-template] to compare them and pick the one that matches what you're shipping.
 
 ## OS Support
 
@@ -201,6 +201,7 @@ The platform-specific `make:<platform>-<arch>` scripts build unsigned standalone
 <!-- Reference Links -->
 
 [pear-docs]: https://docs.pears.com
+[from-a-template]: https://docs.pears.com/p2p/getting-started/from-a-template/
 [hello-pear-bare]: https://github.com/holepunchto/hello-pear-bare
 [hello-pear-daemon]: https://github.com/holepunchto/hello-pear-daemon
 [hello-pear-worker]: https://github.com/holepunchto/hello-pear-worker
