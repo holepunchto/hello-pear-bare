@@ -4,7 +4,7 @@
   "description": "Pear Runtime CLI boilerplate using Bare with OTA updater support.",
   "private": true,
   "bin": "bin.mjs",
-  "upgrade": "pear://6ag5p1h4e9d41qynadob5ujfnsemcmg4x7y1cnc7d7ef4b3ff71o",
+  "upgrade": "pear://<YOUR_KEY_HERE>",
   "scripts": {
     "inline-worker": "npx inline-worker-module hello-pear-worker",
     "format": "prettier . --write",
